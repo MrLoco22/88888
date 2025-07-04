@@ -3,338 +3,202 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>5Dice Kniffel</title>
+<title>5Dice Kniffel - Multiplayer Vorbereitung</title>
 <style>
   body {
     font-family: Arial, sans-serif;
-    background: url('https://images.unsplash.com/photo-1512427691650-2e4f7b0bc123?auto=format&fit=crop&w=1470&q=80') no-repeat center center fixed;
-    background-size: cover;
-    margin: 0; padding: 0;
-  }
-  .container {
-    background: rgba(255,255,255,0.9);
-    max-width: 900px;
-    margin: 20px auto;
-    padding: 20px;
-    border-radius: 10px;
+    background: #f9f9f9 url('https://i.imgur.com/0ONvGZf.png') no-repeat center top;
+    background-size: 200px 200px;
+    margin: 20px;
   }
   h1 {
     text-align: center;
   }
   #dice-container {
     text-align: center;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
   }
   .dice {
     display: inline-block;
-    width: 60px; height: 60px;
-    margin: 0 5px;
-    font-size: 32px;
-    line-height: 60px;
-    text-align: center;
-    border: 2px solid #333;
-    border-radius: 10px;
+    margin: 0 10px;
+    font-size: 50px;
     cursor: pointer;
     user-select: none;
-    background: #f0f0f0;
-    position: relative;
+    transition: transform 0.2s ease;
   }
   .dice.held {
-    background: #a3d2ca;
-    border-color: #388e3c;
+    filter: grayscale(100%);
+    transform: scale(1.2);
   }
   button {
-    margin: 10px auto;
-    display: block;
+    margin: 10px 5px;
     padding: 10px 20px;
-    font-size: 18px;
+    font-size: 16px;
     cursor: pointer;
-    border-radius: 5px;
-    border: none;
-    background-color: #4caf50;
-    color: white;
-    user-select: none;
   }
   table {
-    width: 100%;
     border-collapse: collapse;
-    margin-top: 15px;
+    margin: 0 auto;
+    width: 450px;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
   }
   th, td {
-    border: 1px solid #999;
-    padding: 8px;
+    border: 1px solid #bbb;
     text-align: center;
+    padding: 8px;
+    font-size: 18px;
+    cursor: pointer;
+    position: relative;
+    user-select: none;
   }
   th {
-    background-color: #4caf50;
-    color: white;
+    background: #ddd;
   }
-  td.selectable {
-    cursor: pointer;
-    background-color: #e0e0e0;
-  }
-  td.selectable:hover {
-    background-color: #b2dfdb;
-  }
-  td.filled {
-    background-color: #a3d2ca;
+  td.locked {
+    background: #e0e0e0;
     cursor: default;
+    color: #333;
   }
-  .score-header {
-    font-weight: bold;
-    background-color: #81c784;
+  td .vorschau {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: rgba(0, 0, 0, 0.3);
+    font-style: italic;
+    pointer-events: none;
+    user-select: none;
   }
-  .bonus, .gesamt {
+  #info {
+    text-align: center;
+    margin-top: 15px;
     font-weight: bold;
   }
 </style>
 </head>
 <body>
-<div class="container">
-  <h1>5Dice Kniffel</h1>
-  <div id="dice-container">
-    <!-- Würfel kommen hier rein -->
-  </div>
-  <button id="roll-button">Würfeln</button>
-  <p id="roll-info">Würfe: 0 von 3</p>
 
-  <table id="score-table">
-    <thead>
-      <tr>
-        <th>Kategorie</th>
-        <th>Eintrag</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr><td>Einer</td><td class="selectable" data-category="1"></td></tr>
-      <tr><td>Zweier</td><td class="selectable" data-category="2"></td></tr>
-      <tr><td>Dreier</td><td class="selectable" data-category="3"></td></tr>
-      <tr><td>Vierer</td><td class="selectable" data-category="4"></td></tr>
-      <tr><td>Fünfer</td><td class="selectable" data-category="5"></td></tr>
-      <tr><td>Sechser</td><td class="selectable" data-category="6"></td></tr>
-      <tr class="score-header"><td>Bonus</td><td id="bonus">0</td></tr>
-      <tr class="score-header"><td>Gesamt oben</td><td id="gesamt-ob"></td></tr>
-      <tr><td>3er Pasch</td><td class="selectable" data-category="3p"></td></tr>
-      <tr><td>4er Pasch</td><td class="selectable" data-category="4p"></td></tr>
-      <tr><td>Full House</td><td class="selectable" data-category="fh"></td></tr>
-      <tr><td>Kleine Straße</td><td class="selectable" data-category="ks"></td></tr>
-      <tr><td>Große Straße</td><td class="selectable" data-category="gs"></td></tr>
-      <tr><td>Kniffel</td><td class="selectable" data-category="kniffel"></td></tr>
-      <tr><td>Chance</td><td class="selectable" data-category="chance"></td></tr>
-      <tr class="score-header"><td>Gesamt unten</td><td id="gesamt-un"></td></tr>
-      <tr class="score-header"><td>Gesamt</td><td id="gesamt"></td></tr>
-    </tbody>
-  </table>
+<h1>5Dice Kniffel</h1>
+
+<div id="dice-container">
+  <!-- 5 Würfel -->
 </div>
+
+<div style="text-align:center;">
+  <button id="roll-btn">Würfeln</button>
+  <button id="reset-btn">Zurücksetzen</button>
+</div>
+
+<table id="score-table">
+  <thead>
+    <tr>
+      <th>Kategorie</th>
+      <th>Punkte</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>Einsen</td><td id="Einsen"></td></tr>
+    <tr><td>Zweien</td><td id="Zweien"></td></tr>
+    <tr><td>Dreien</td><td id="Dreien"></td></tr>
+    <tr><td>Vieren</td><td id="Vieren"></td></tr>
+    <tr><td>Fünfen</td><td id="Fuenfen"></td></tr>
+    <tr><td>Sechsen</td><td id="Sechsen"></td></tr>
+    <tr><td><b>Bonus</b></td><td id="Bonus" class="locked">0</td></tr>
+    <tr><td>3er Pasch</td><td id="DreierPasch"></td></tr>
+    <tr><td>4er Pasch</td><td id="ViererPasch"></td></tr>
+    <tr><td>Full House</td><td id="FullHouse"></td></tr>
+    <tr><td>Kleine Straße</td><td id="KleineStrasse"></td></tr>
+    <tr><td>Große Straße</td><td id="GrosseStrasse"></td></tr>
+    <tr><td>Kniffel</td><td id="Kniffel"></td></tr>
+    <tr><td>Chance</td><td id="Chance"></td></tr>
+    <tr><td><b>Gesamt oben</b></td><td id="GesamtOben" class="locked">0</td></tr>
+    <tr><td><b>Gesamt unten</b></td><td id="GesamtUnten" class="locked">0</td></tr>
+    <tr><td><b>Gesamt</b></td><td id="Gesamt" class="locked">0</td></tr>
+  </tbody>
+</table>
+
+<div id="info">Du hast 3 Würfe pro Runde. Würfle!</div>
 
 <script>
   const diceContainer = document.getElementById('dice-container');
-  const rollButton = document.getElementById('roll-button');
-  const rollInfo = document.getElementById('roll-info');
+  const rollBtn = document.getElementById('roll-btn');
+  const resetBtn = document.getElementById('reset-btn');
+  const info = document.getElementById('info');
 
-  let dice = [1, 1, 1, 1, 1];
-  let held = [false, false, false, false, false];
-  let rolls = 0;
-  let wertEingetragen = false; // Trackt, ob in aktueller Runde schon Wert eingetragen wurde
+  let dice = [0,0,0,0,0];
+  let held = [false,false,false,false,false];
+  let rollsLeft = 3;
 
-  // Würfel-Emojis (1 bis 6)
-  const diceFaces = ["\u2680", "\u2681", "\u2682", "\u2683", "\u2684", "\u2685"];
+  // Kategorien, die schon belegt sind
+  let taken = {
+    Einsen: false,
+    Zweien: false,
+    Dreien: false,
+    Vieren: false,
+    Fuenfen: false,
+    Sechsen: false,
+    DreierPasch: false,
+    ViererPasch: false,
+    FullHouse: false,
+    KleineStrasse: false,
+    GrosseStrasse: false,
+    Kniffel: false,
+    Chance: false
+  };
 
-  // Initiale Würfelanzeige
-  function renderDice() {
+  // Erstellt Würfel-Elemente im DOM
+  function createDice() {
     diceContainer.innerHTML = '';
-    dice.forEach((value, idx) => {
-      const die = document.createElement('div');
-      die.classList.add('dice');
-      if (held[idx]) die.classList.add('held');
-      die.textContent = diceFaces[value - 1];
-      die.addEventListener('click', () => {
-        if (rolls === 0) return; // Noch nicht gewürfelt
-        held[idx] = !held[idx];
-        renderDice();
+    for(let i=0; i<5; i++) {
+      const div = document.createElement('div');
+      div.classList.add('dice');
+      div.dataset.index = i;
+      div.textContent = '🎲';
+      div.addEventListener('click', () => {
+        if(rollsLeft < 3) { // nur während des Spiels halten
+          held[i] = !held[i];
+          div.classList.toggle('held');
+        }
       });
-      diceContainer.appendChild(die);
-    });
+      diceContainer.appendChild(div);
+    }
   }
 
-  // Würfeln
+  // Würfelt alle nicht gehaltenen Würfel
   function rollDice() {
-    if (rolls >= 3) {
-      alert('Du hast bereits 3-mal gewürfelt. Bitte trage einen Wert ein.');
-      return;
-    }
-    for (let i = 0; i < 5; i++) {
-      if (!held[i]) {
-        dice[i] = Math.floor(Math.random() * 6) + 1;
+    if(rollsLeft <= 0) return;
+    for(let i=0; i<5; i++) {
+      if(!held[i]) {
+        dice[i] = Math.floor(Math.random()*6)+1;
       }
     }
-    rolls++;
-    wertEingetragen = false; // Neue Runde, Wert noch nicht eingetragen
-    renderDice();
-    updateRollInfo();
-    activateSelectable();
+    rollsLeft--;
+    updateDiceDisplay();
+    updateInfo();
+    updatePreview();
   }
 
-  // Anzeige der Würfe aktualisieren
-  function updateRollInfo() {
-    rollInfo.textContent = `Würfe: ${rolls} von 3`;
-  }
-
-  // Aktiviert anklickbare Felder in der Tabelle (nur, wenn noch kein Wert eingetragen)
-  function activateSelectable() {
-    const cells = document.querySelectorAll('td.selectable');
-    cells.forEach(cell => {
-      if (!wertEingetragen && !cell.classList.contains('filled')) {
-        cell.style.pointerEvents = 'auto';
-        cell.style.backgroundColor = '#e0e0e0';
-        cell.addEventListener('click', onCategoryClick);
+  // Zeigt die Würfelwerte an
+  function updateDiceDisplay() {
+    [...diceContainer.children].forEach((div,i) => {
+      const val = dice[i];
+      const unicodeDice = ['⚀','⚁','⚂','⚃','⚄','⚅'][val-1];
+      div.textContent = val === 0 ? '🎲' : unicodeDice;
+      if(held[i]) {
+        div.classList.add('held');
       } else {
-        cell.style.pointerEvents = 'none';
-        cell.style.backgroundColor = cell.classList.contains('filled') ? '#a3d2ca' : '#f0f0f0';
-        cell.removeEventListener('click', onCategoryClick);
+        div.classList.remove('held');
       }
     });
   }
 
-  // Deaktiviert anklickbare Felder (nach Eintrag)
-  function deactivateSelectable() {
-    const cells = document.querySelectorAll('td.selectable');
-    cells.forEach(cell => {
-      cell.style.pointerEvents = 'none';
-      cell.style.backgroundColor = cell.classList.contains('filled') ? '#a3d2ca' : '#f0f0f0';
-      cell.removeEventListener('click', onCategoryClick);
-    });
+  // Aktualisiert die Infoanzeige
+  function updateInfo() {
+    info.textContent = `Du hast noch ${rollsLeft} Würfe${rollsLeft === 0 ? '. Bitte wähle eine Kategorie.' : ''}`;
+    rollBtn.disabled = rollsLeft === 0;
   }
 
-  // Klick auf Kategorie in Tabelle
-  function onCategoryClick(e) {
-    if (wertEingetragen) {
-      alert('Du kannst pro Runde nur einen Wert eintragen.');
-      return;
-    }
-    const cell = e.currentTarget;
-    const category = cell.getAttribute('data-category');
-    if (cell.classList.contains('filled')) {
-      alert('Kategorie ist schon eingetragen.');
-      return;
-    }
-    const score = calculateScore(category);
-    if (score === null) {
-      alert('Kann diese Kategorie nicht berechnen.');
-      return;
-    }
-    cell.textContent = score;
-    cell.classList.add('filled');
-    wertEingetragen = true;
-
-    // Nach Eintragen Würfe zurücksetzen für nächste Runde
-    rolls = 0;
-    held = [false, false, false, false, false];
-    dice = [1,1,1,1,1];
-    renderDice();
-    updateRollInfo();
-    deactivateSelectable();
-    updateBonusUndGesamt();
-  }
-
-  // Beispielhafte Score-Berechnung (passt du an deine Logik an)
-  function calculateScore(category) {
-    // Kategorie 1 bis 6: Summe der entsprechenden Würfel
-    if ("123456".includes(category)) {
-      const num = parseInt(category);
-      return dice.filter(d => d === num).reduce((a,b) => a+b, 0);
-    }
-    // Für die anderen Kategorien nur Dummy-Beispiele:
-    switch(category) {
-      case '3p': // 3er Pasch
-        if (hasNOfAKind(3)) return dice.reduce((a,b)=>a+b,0);
-        return 0;
-      case '4p': // 4er Pasch
-        if (hasNOfAKind(4)) return dice.reduce((a,b)=>a+b,0);
-        return 0;
-      case 'fh': // Full House
-        if (isFullHouse()) return 25;
-        return 0;
-      case 'ks': // Kleine Straße
-        if (hasSmallStraight()) return 30;
-        return 0;
-      case 'gs': // Große Straße
-        if (hasLargeStraight()) return 40;
-        return 0;
-      case 'kniffel':
-        if (hasNOfAKind(5)) return 50;
-        return 0;
-      case 'chance':
-        return dice.reduce((a,b)=>a+b,0);
-      default:
-        return null;
-    }
-  }
-
-  // Hilfsfunktionen für Wertberechnung:
-  function hasNOfAKind(n) {
-    const counts = {};
-    dice.forEach(d => counts[d] = (counts[d]||0)+1);
-    return Object.values(counts).some(count => count >= n);
-  }
-  function isFullHouse() {
-    const counts = {};
-    dice.forEach(d => counts[d] = (counts[d]||0)+1);
-    const values = Object.values(counts).sort();
-    return values.length === 2 && values[0] === 2 && values[1] === 3;
-  }
-  function hasSmallStraight() {
-    const unique = [...new Set(dice)].sort();
-    const straights = [
-      [1,2,3,4],
-      [2,3,4,5],
-      [3,4,5,6]
-    ];
-    return straights.some(straight => straight.every(num => unique.includes(num)));
-  }
-  function hasLargeStraight() {
-    const unique = [...new Set(dice)].sort();
-    const straights = [
-      [1,2,3,4,5],
-      [2,3,4,5,6]
-    ];
-    return straights.some(straight => straight.every(num => unique.includes(num)));
-  }
-
-  // Bonus und Gesamtsummen berechnen
-  function updateBonusUndGesamt() {
-    // Oben Summe (Einer bis Sechser)
-    let sumOben = 0;
-    for(let i=1; i<=6; i++) {
-      const cell = document.querySelector(`td.selectable[data-category="${i}"]`);
-      if(cell && cell.classList.contains('filled')) {
-        sumOben += parseInt(cell.textContent) || 0;
-      }
-    }
-    document.getElementById('bonus').textContent = sumOben >= 63 ? 35 : 0;
-    document.getElementById('gesamt-ob').textContent = sumOben + (sumOben >= 63 ? 35 : 0);
-
-    // Unten Summe (3er Pasch bis Chance)
-    const untenCats = ['3p','4p','fh','ks','gs','kniffel','chance'];
-    let sumUnten = 0;
-    untenCats.forEach(cat => {
-      const cell = document.querySelector(`td.selectable[data-category="${cat}"]`);
-      if(cell && cell.classList.contains('filled')) {
-        sumUnten += parseInt(cell.textContent) || 0;
-      }
-    });
-    document.getElementById('gesamt-un').textContent = sumUnten;
-
-    // Gesamt Summe
-    document.getElementById('gesamt').textContent = sumOben + (sumOben >= 63 ? 35 : 0) + sumUnten;
-  }
-
-  // Setup initial
-  rollButton.addEventListener('click', rollDice);
-  renderDice();
-  updateRollInfo();
-  deactivateSelectable();
-
-</script>
-</body>
-</html>
+  // Berechnet die Punkte für alle Kategorien basierend auf aktuellem Wurf
+  function calculateScores(diceArray) {
+    const coun
